@@ -1,5 +1,5 @@
-#ifndef MY6502_DATA
-#define MY6502_DATA
+#ifndef MY6502_DATATYPE
+#define MY6502_DATATYPE
 
 typedef unsigned char  Byte;
 typedef unsigned short Word;
