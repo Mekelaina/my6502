@@ -3,7 +3,7 @@
 
 // http://www.6502.org/users/obelisk/
 
-#include "data.h"
+#include "datatype.h"
 
 typedef struct {
     Word PC;
@@ -20,4 +20,4 @@ typedef struct {
 
 } CPU;
 
-#endif
+#endif //MY6502_CPU

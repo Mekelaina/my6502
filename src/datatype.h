@@ -4,4 +4,4 @@
 typedef unsigned char  Byte;
 typedef unsigned short Word;
 
-#endif
+#endif //MY6502_DATATYPE
