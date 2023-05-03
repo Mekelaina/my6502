@@ -5,6 +5,9 @@
 
 #include "datatype.h"
 
+
+#define RESET_VECTOR 0xFFFC
+
 typedef struct {
     Word PC;
     Word SP;

@@ -1,6 +1,6 @@
 
 
-signature = [0x4D, 0x59, 0x36, 0x35, 0x30, 0x32]
+signature = [0x4D, 0x59, 0x36, 0x35, 0x30, 0x32, 0xFF, 0xFF]
 
 reset_low  = 0xFFFC
 reset_high = 0xFFFD
@@ -13,8 +13,8 @@ content = []
 content += signature
 print(content)
 
-for x in range(0xFFFF+1):
-    print(x)
+for x in range(65536):
+    #print(x)
     if x == reset_low:
         content.append(lowbyte)
     elif x == reset_high:

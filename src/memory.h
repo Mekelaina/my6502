@@ -2,6 +2,8 @@
 #define MY6502_MEMORY
 
 #include "datatype.h"
+#include <stdbool.h>
+
 
 /*
 * a simple dynamic array struct and implementation so the emulator can have chunks of memory of any size.
@@ -19,10 +21,10 @@ typedef struct {
 } Mem;
 
 //allocates specified amount of memory for struct. memory is zero'd
-void initMem(Mem* mem, Word size); 
+bool initMem(Mem* mem, Word size); 
 
 //resizes allocated memory
-void resizeMem(Mem* mem, Word newSize); 
+bool resizeMem(Mem* mem, Word newSize); 
 
 //frees the memory and clears the structure info.
 void freeMem(Mem* mem); 
