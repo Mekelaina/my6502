@@ -90,7 +90,7 @@ bool readBinaryFile(Reader *reader){
 
     return true;
 }
-
+//!TODO: rework reader for propper binary file support
 bool readFile(Reader *reader){
 
     if(reader->filepath == NULL){
