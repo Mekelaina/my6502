@@ -33,7 +33,9 @@ void initReader(Reader *reader){
 }
 
 void freeReader(Reader *reader){
+    printf("freeing filepath\n");
     free(reader->filepath);
+    printf("freeing content\n");
     free(reader->content);
 }
 

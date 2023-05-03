@@ -10,7 +10,7 @@ lowbyte = 0x00
 highbyte = 0x80
 
 content = []
-content += signature
+#content += signature
 print(content)
 
 for x in range(65536):

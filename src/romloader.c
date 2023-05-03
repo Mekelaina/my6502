@@ -9,23 +9,10 @@
 const Byte ROM_SIGNATURE[] = {0x4D,0x59,0x36,0x35,0x30,0x32,0xFF,0xFF};
 
 static bool verifyRom(Reader *reader){
-    int fs = reader->filesize;
-    size_t diff = fs - SIGNATURE_SIZE;
-    if(diff != MAX_MEM){
+
+    if(reader->filesize != MAX_MEM){
         printf("filesize wrong: got %d, extpected %d\n", reader->filesize, MAX_MEM);
         return false;
-    }
-
-    for(int i = 0; i < fs; ++i){
-        if(i < 8){
-            if((Byte)(reader->content[i]) != ROM_SIGNATURE[i]){
-                printf("incorrect byte in header: got: %d, expected: %d\n", reader->content[i], ROM_SIGNATURE[i]);
-                return false;
-            }
-        } 
-        else {
-            break;
-        }    
     }
     return true;
 }
@@ -33,9 +20,13 @@ static bool verifyRom(Reader *reader){
 
 //TODO fix copying the data from reader to memory
 static void mapRom(Reader *reader, Mem *memory){
-    for(int i = SIGNATURE_SIZE; i < MAX_MEM; ++i){
-        memory->m[i] = reader->content[i + SIGNATURE_SIZE - 1];
+    printf("mapping mem\n");
+    char* temp = reader->content;
+    for(int i = 0; i < MAX_MEM; ++i){
+        char t = reader->content[i];
+        memory->m[i] = (Byte)t;
     }
+    reader->content = temp;
 }
 
 bool loadrom(Mem *memory, char *filepath){
@@ -50,10 +41,13 @@ bool loadrom(Mem *memory, char *filepath){
             return false;
         }
         mapRom(&reader, memory);
+        //printf("mapping mem\n");
+        //memcpy(memory->m, reader.content, MAX_MEM);
+        
         freeReader(&reader);
         return true;
     } 
-
+    printf("loop\n");
     freeReader(&reader);
     return false;
 }
