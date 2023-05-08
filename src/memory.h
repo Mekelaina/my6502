@@ -12,7 +12,7 @@
 
 //TODO: load and save memory to a file
 
-#define MAX_MEM 1024 * 64 //64 Kilobytes
+#define MAX_MEM 65536 //64 Kilobytes
 #define TEST_MEM 1024 * 1 //1 Kilobyte
 
 typedef struct {

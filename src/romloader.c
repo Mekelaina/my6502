@@ -1,53 +1,80 @@
 #include "romloader.h"
-
 #include "datatype.h"
-#include "filereader.h"
+
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <linux/limits.h>
+#include <stdlib.h>
+
+
+typedef struct {
+    size_t size;
+    Byte* content;
+} ROM; 
 
 const Byte ROM_SIGNATURE[] = {0x4D,0x59,0x36,0x35,0x30,0x32,0xFF,0xFF};
 
-static bool verifyRom(Reader *reader){
 
-    if(reader->filesize != MAX_MEM){
-        printf("filesize wrong: got %d, extpected %d\n", reader->filesize, MAX_MEM);
-        return false;
-    }
-    return true;
+static int getFileSize(FILE *fp){
+    int prev = ftell(fp);
+    fseek(fp, 0L, SEEK_END);
+    int sz = ftell(fp);
+    fseek(fp, prev, SEEK_SET);
+    return sz;
 }
 
-
-//TODO fix copying the data from reader to memory
-static void mapRom(Reader *reader, Mem *memory){
-    printf("mapping mem\n");
-    char* temp = reader->content;
-    for(int i = 0; i < MAX_MEM; ++i){
-        char t = reader->content[i];
-        memory->m[i] = (Byte)t;
+static char* resolvepath(char *relativepath){
+    //char buf[PATH_MAX];
+    char *res = realpath(relativepath, NULL);
+    if(res){
+        return res;
+    } else {
+        printf("Error: could not resolve file [%s]", relativepath);
+        return NULL;
     }
-    reader->content = temp;
 }
 
-bool loadrom(Mem *memory, char *filepath){
-    Reader reader;
-    initReader(&reader);
-    setFile(&reader, filepath);
-    readBinaryFile(&reader);
-    if(verifyRom(&reader)){
-        if(!initMem(memory, MAX_MEM)){
-            fprintf(stderr, "ERROR: Couldnt allocate memory. %s", strerror(errno));
-            freeReader(&reader);
+static bool readBinFile(Mem *mem, char* filepath){
+    char *path = resolvepath(filepath);
+    if(path != NULL){
+        FILE *fp = fopen(path, "rb");
+        if(fp == NULL){
+            printf("%s:%s", "Error opening file", path);
+            free(path);
             return false;
         }
-        mapRom(&reader, memory);
-        //printf("mapping mem\n");
-        //memcpy(memory->m, reader.content, MAX_MEM);
         
-        freeReader(&reader);
+        int fsize = getFileSize(fp);
+        Byte *content = malloc(sizeof(Byte) * fsize);
+
+        if(content == NULL){
+            printf("ERROR: Could not allocate necessary memory.\n");
+            fclose(fp);
+            free(path);
+            return false;
+        }
+
+        fread(content, sizeof(Byte), fsize, fp);
+
+        fclose(fp);
+        free(path);
+
+        mem->size = fsize;
+        mem->m = content;
         return true;
-    } 
-    printf("loop\n");
-    freeReader(&reader);
+    }
+    free(path);
+    printf("%s", "path null");
     return false;
+}
+
+
+bool loadrom(Mem *memory, char *filepath){
+    
+    if(readBinFile(memory, filepath)){
+        return true;
+    }
+    return false;
+    
 }
