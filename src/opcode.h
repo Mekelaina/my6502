@@ -4,18 +4,18 @@
 #include <stdint.h>
 
 typedef enum addressingmode {
-    IMPLIED,
-    IMMEDIATE,
-    ZEROPAGE,
-    ZEROPAGE_X,
-    ZEROPAGE_Y,
-    RELATIVE,
-    ABSOLUTE,
-    ABSOLUTE_X,
-    ANSOLUTE_Y,
-    INDIRECT,
-    INDIRECT_X,
-    INDIRECT_Y
+    IMP,
+    IMM,
+    ZP0,
+    ZPX,
+    ZPY,
+    REL,
+    ABS,
+    ABX,
+    ABY,
+    IND,
+    IZX,
+    IZY
 } AddressingMode;
 
 typedef enum instruction {
@@ -48,7 +48,9 @@ typedef struct opcode {
 //lookup table for opcodes. format and concept taken from
 //https://github.com/OneLoneCoder/olcNES/blob/master/Part%232%20-%20CPU/olc6502.cpp
 
-static const Opcode OPCODES[256] = {{.name = "BRK", .mn =  BRK,  .mode = IMMEDIATE, .cycles = 7}, {.name = "ORA", .mn = ORA,  .mode = INDIRECT_X, .cycles = 6}, {.name = "???", .mn = XXX, .mode = IMPLIED, .cycles = 2}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}};
+static const Opcode OPCODES[256] = {
+    {.name = "BRK", .mn = BRK, .mode = IMM, .cycles = 7}, {.name = "ORA", .mn = ORA,  .mode = IZX, .cycles = 6}, {.name = "???", .mn = XXX, .mode = IMP, .cycles = 2}, {.name = "???", .mn = XXX, .mode = IMPLIED, .cycles = 8 }, { .name = "???", .mn = NOP, .mode = IMP, .cycles = 3 }, {.name = "ORA", .mn = ORA, .nm = ZP0, .cycles = 3}, {.name = "ASL", .mn = ASL, .nm = ZP0, .cycles = 5}, {.name = "???", .mn = XXX, .nm = IMP, .cycles = 5}, {.name = "PHP", .mn = PHP, .nm = IMP, .cycles = 3}, {.name = "ORA", .mn = ORA, .nm = IMM, .cycles = 2}, {.name = "ASL", .mn = ASL, .nm = IMP, .cycles = 2}, {.name = "???", .mn = XXX, .nm = IMP, .cycles = 2}, {.name = "???", .mn = NOP, .nm = IMP, .cycles = 4}, {.name = "ORA", .mn = ORA, .nm = ABS, .cycles = 4}, {.name = "ASL", .mn = ASL, .nm = ABS, .cycles = 6}, {.name = "???", .mn = XXX, .nm = IMP, .cycles = 6},
+    };
 
 
 #endif //MY6502_OPCODE
